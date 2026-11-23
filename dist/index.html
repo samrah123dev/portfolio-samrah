@@ -12,8 +12,8 @@
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
       html { scroll-behavior: smooth; }
       body {
-        background-color: #1a0003;
-        color: #fff;
+        background-color: #ffffff;
+        color: #8B0000;
         font-family: 'Plus Jakarta Sans', sans-serif;
         font-size: 15px;
         line-height: 1.8;
@@ -47,9 +47,9 @@
         justify-content: center;
         gap: 0;
         padding: 0 24px;
-        background: rgba(26,0,3,0.85);
+        background: #ffffff;
         backdrop-filter: blur(12px);
-        border-bottom: 1px solid rgba(255,255,255,.07);
+        border-bottom: 1px solid rgba(0,0,0,.07);
         pointer-events: none;
       }
       .navbar a {
@@ -58,18 +58,19 @@
         font-size: 11px;
         font-weight: 700;
         letter-spacing: .15em;
-        color: rgba(255,255,255,.5);
+        color: #8B0000;
         text-decoration: none;
         text-transform: uppercase;
         transition: color .25s;
         border-bottom: 2px solid transparent;
         margin-bottom: -1px;
       }
-      .navbar a:hover { color: rgba(255,255,255,.85); }
+      .navbar a:hover { color: #1a0003; }
       .navbar a.active {
-        color: #fff;
-        border-bottom-color: #c0392b;
+        color: #1a0003;
+        border-bottom-color: #8B0000;
       }
+      .navbar a:focus-visible { outline: 2px solid #8B0000; outline-offset: 2px; }
 
       /* ── sections ── */
       section { padding: 100px 24px; }
@@ -91,8 +92,8 @@
         line-height: 1.8;
       }
       .glass-pill {
-        border: 1px solid rgba(255,255,255,.08);
-        background: rgba(255,255,255,.04);
+        border: 1px solid rgba(0,0,0,.08);
+        background: rgba(0,0,0,.02);
       }
 
       /* ── HOME ── */
@@ -117,11 +118,11 @@
       }
       .hero-eyebrow {
         font-size: 11px; font-weight: 700; letter-spacing: .25em;
-        color: rgba(255,255,255,.55); text-transform: uppercase; margin-bottom: 14px;
+        color: #8B0000; text-transform: uppercase; margin-bottom: 14px;
       }
       .hero-headline {
         font-size: clamp(1rem, 1.6vw, 1.35rem);
-        font-weight: 500; line-height: 1.7; color: #fff; margin-bottom: 32px;
+        font-weight: 500; line-height: 1.7; color: #8B0000; margin-bottom: 32px;
       }
       @media (max-width: 640px) {
         #home { align-items: flex-end; padding-bottom: 60px; }
@@ -152,7 +153,7 @@
 
       /* ── sections below home get a solid bg so canvas doesn't bleed through ── */
       #how-it-works, #proof, #testimonials, #about, #contact, footer {
-        background: #1a0003;
+        background: #ffffff;
         position: relative;
       }
       #how-it-works { padding-top: 80px; padding-bottom: 80px; }
@@ -174,9 +175,9 @@
       }
       .hiw-headline {
         font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 700;
-        color: #fff; line-height: 1.2; letter-spacing: -.01em; margin-bottom: 8px;
+        color: #8B0000; line-height: 1.2; letter-spacing: -.01em; margin-bottom: 8px;
       }
-      .hiw-subhead { font-size: .85rem; color: rgba(255,255,255,.4); font-style: italic; margin-bottom: 8px; }
+      .hiw-subhead { font-size: .85rem; color: #8B0000; font-style: italic; margin-bottom: 8px; }
 
       #how-it-works .hiw-layout {
         display: grid;
@@ -187,21 +188,23 @@
         align-items: start;
       }
       .hiw-list { display: flex; flex-direction: column; }
-      .hiw-item {
+.hiw-item {
         display: flex; align-items: center; gap: 14px;
         padding: 14px 12px;
         cursor: pointer; transition: all .15s;
         border-left: 2px solid transparent;
+        margin-bottom: -1px;
+        background: rgba(0,0,0,.02);
       }
-      .hiw-item:hover { background: rgba(255,255,255,.03); }
-      .hiw-item.active { border-left-color: #fff; background: rgba(255,255,255,.04); }
+      .hiw-item:hover { background: rgba(0,0,0,.03); }
+      .hiw-item.active { border-left-color: #8B0000; background: rgba(0,0,0,.04); }
       .hiw-num {
         font-size: 11px; font-weight: 700; letter-spacing: .12em;
-        color: rgba(255,255,255,.2); flex-shrink: 0; width: 20px; transition: color .2s;
+        color: #8B0000; flex-shrink: 0; width: 20px; transition: color .2s;
       }
-      .hiw-item.active .hiw-num { color: rgba(255,255,255,.45); }
-      .hiw-label { font-size: .875rem; color: rgba(255,255,255,.4); transition: color .2s; line-height: 1.4; margin-bottom: 4px; }
-      .hiw-item.active .hiw-label { color: #fff; font-weight: 600; }
+      .hiw-item.active .hiw-num { color: #1a0003; }
+.hiw-label { font-size: .875rem; color: #8B0000; transition: color .2s; line-height: 1.4; margin-bottom: 4px; }
+.hiw-item.active .hiw-label { color: #1a0003; font-weight: 600; }
 
       .hiw-detail {
         border-left: 1px solid rgba(255,255,255,.08);
@@ -392,7 +395,7 @@
         font-size: 1rem; font-weight: 700; color: #fff; line-height: 1.4;
       }
       .about-bio p {
-        font-size: .82rem; color: rgba(255,255,255,.55); line-height: 1.7;
+        font-size: .82rem; color: #8B0000; line-height: 1.7;
       }
       .about-stats {
         display: flex; align-items: stretch;
@@ -563,7 +566,7 @@
 
           <div class="hiw-header">
             <span class="hiw-eyebrow">The process</span>
-            <h2 class="hiw-headline">From first conversation to consistent results.</h2>
+            
             <p class="hiw-subhead">From "who are you, really?" to "why is everyone messaging me?"</p>
           </div>
 
