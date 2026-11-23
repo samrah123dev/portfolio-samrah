@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Samrah Khaliq</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" crossorigin href="/assets/index-BqGj3chu.css" />
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html { scroll-behavior: smooth; }
+      body {
+        background-color: #1a0003;
+        color: #fff;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 15px;
+        line-height: 1.8;
+        overflow-x: hidden;
+      }
+
+      /* ── React canvas lives here, fixed behind everything ── */
+      #react-canvas {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+      }
+      /* hide the React-rendered navbar & router content */
+      #react-canvas > header,
+      #react-canvas [class*="Routes"],
+      #react-canvas > div:last-child { display: none !important; }
+
+      /* ── scrollable page content sits above the canvas ── */
+      #page {
+        position: relative;
+        z-index: 10;
+      }
+
+      /* ── navbar ── */
+      .navbar {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        z-index: 50;
+        display: flex;
+        justify-content: center;
+        gap: 0;
+        padding: 0 24px;
+        background: rgba(26,0,3,0.85);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255,255,255,.07);
+        pointer-events: none;
+      }
+      .navbar a {
+        pointer-events: all;
+        padding: 16px 18px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: .15em;
+        color: rgba(255,255,255,.5);
+        text-decoration: none;
+        text-transform: uppercase;
+        transition: color .25s;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -1px;
+      }
+      .navbar a:hover { color: rgba(255,255,255,.85); }
+      .navbar a.active {
+        color: #fff;
+        border-bottom-color: #c0392b;
+      }
+
+      /* ── sections ── */
+      section { padding: 100px 24px; }
+      .section-heading {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: clamp(1.75rem, 4vw, 2.5rem);
+        font-weight: 700;
+        color: #fff;
+        text-align: center;
+        margin-bottom: 16px;
+      }
+      .section-sub {
+        color: #fff;
+        font-weight: 700;
+        font-size: 15px;
+        text-align: center;
+        max-width: 520px;
+        margin: 0 auto 48px;
+        line-height: 1.8;
+      }
+      .glass-pill {
+        border: 1px solid rgba(255,255,255,.08);
+        background: rgba(255,255,255,.04);
+      }
+
+      /* ── HOME ── */
+      #home {
+        min-height: 100vh;
+        padding-top: 80px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        background: transparent;
+      }
+      .hero-text {
+        position: relative;
+        z-index: 20;
+        width: 36%;
+        max-width: 380px;
+        min-width: 200px;
+        padding-top: clamp(80px, 12vh, 140px);
+        padding-left: clamp(16px, 3vw, 48px);
+        padding-right: 12px;
+        text-align: left;
+      }
+      .hero-eyebrow {
+        font-size: 11px; font-weight: 700; letter-spacing: .25em;
+        color: rgba(255,255,255,.55); text-transform: uppercase; margin-bottom: 14px;
+      }
+      .hero-headline {
+        font-size: clamp(1rem, 1.6vw, 1.35rem);
+        font-weight: 500; line-height: 1.7; color: #fff; margin-bottom: 32px;
+      }
+      @media (max-width: 640px) {
+        #home { align-items: flex-end; padding-bottom: 60px; }
+        .hero-text { width: 100%; max-width: 100%; padding-top: 0; text-align: center; }
+        .hero-ctas { justify-content: center; }
+        .hero-headline { font-size: 1.2rem; }
+      }
+      .hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+      .btn-primary {
+        display: inline-flex; align-items: center; gap: 8px;
+        padding: 10px 22px; border-radius: 6px;
+        background: #fff; color: #1a0003;
+        font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+        text-decoration: none;
+        transition: background .25s, transform .2s;
+      }
+      .btn-primary:hover { background: rgba(255,255,255,.88); transform: translateY(-1px); }
+      .btn-secondary {
+        display: inline-flex; align-items: center; gap: 8px;
+        padding: 10px 20px; border-radius: 6px;
+        font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+        color: rgba(255,255,255,.8); text-decoration: none;
+        border: 1px solid rgba(255,255,255,.22);
+        background: transparent;
+        transition: border-color .25s, color .25s, transform .2s;
+      }
+      .btn-secondary:hover { border-color: rgba(255,255,255,.45); color: #fff; transform: translateY(-1px); }
+
+      /* ── sections below home get a solid bg so canvas doesn't bleed through ── */
+      #how-it-works, #proof, #testimonials, #about, #contact, footer {
+        background: #1a0003;
+        position: relative;
+      }
+      #how-it-works { padding-top: 80px; padding-bottom: 80px; }
+      #about { padding-top: 48px; padding-bottom: 48px; }
+
+      /* ── HOW IT WORKS ── */
+      #how-it-works { padding-top: 60px; padding-bottom: 60px; }
+
+      .hiw-inner { max-width: 960px; margin: 0 auto; }
+
+      .hiw-header {
+        border-bottom: 1px solid rgba(255,255,255,.08);
+        padding-bottom: 32px; margin-bottom: 48px;
+      }
+      .hiw-eyebrow {
+        display: inline-block; font-size: 11px; font-weight: 700;
+        letter-spacing: .2em; text-transform: uppercase;
+        color: rgba(255,255,255,.35); margin-bottom: 12px;
+      }
+      .hiw-headline {
+        font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 700;
+        color: #fff; line-height: 1.2; letter-spacing: -.01em; margin-bottom: 8px;
+      }
+      .hiw-subhead { font-size: .85rem; color: rgba(255,255,255,.4); font-style: italic; }
+
+      #how-it-works .hiw-layout {
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        gap: 48px;
+        max-width: 960px;
+        margin: 0 auto;
+        align-items: start;
+      }
+      .hiw-list { display: flex; flex-direction: column; }
+      .hiw-item {
+        display: flex; align-items: center; gap: 14px;
+        padding: 14px 12px;
+        cursor: pointer; transition: all .15s;
+        border-left: 2px solid transparent;
+      }
+      .hiw-item:hover { background: rgba(255,255,255,.03); }
+      .hiw-item.active { border-left-color: #fff; background: rgba(255,255,255,.04); }
+      .hiw-num {
+        font-size: 11px; font-weight: 700; letter-spacing: .12em;
+        color: rgba(255,255,255,.2); flex-shrink: 0; width: 20px; transition: color .2s;
+      }
+      .hiw-item.active .hiw-num { color: rgba(255,255,255,.45); }
+      .hiw-label { font-size: .875rem; color: rgba(255,255,255,.4); transition: color .2s; line-height: 1.4; }
+      .hiw-item.active .hiw-label { color: #fff; font-weight: 600; }
+
+      .hiw-detail {
+        border-left: 1px solid rgba(255,255,255,.08);
+        padding-left: 48px;
+        display: flex; flex-direction: column; gap: 16px; min-height: 280px;
+      }
+      .hiw-counter { font-size: 11px; font-weight: 700; letter-spacing: .2em; color: rgba(255,255,255,.25); text-transform: uppercase; }
+      .hiw-title { font-size: 1.4rem; font-weight: 700; color: #fff; line-height: 1.3; }
+      .hiw-body { font-size: .9rem; color: rgba(255,255,255,.6); line-height: 1.8; flex: 1; }
+      .hiw-outcome {
+        font-size: .85rem; color: rgba(255,255,255,.45);
+        border-left: 2px solid rgba(255,255,255,.15);
+        padding-left: 14px; line-height: 1.65;
+      }
+      .hiw-outcome strong { color: rgba(255,255,255,.65); }
+      .hiw-nav { display: flex; gap: 10px; padding-top: 4px; }
+      .hiw-btn {
+        display: inline-flex; align-items: center; justify-content: center;
+        padding: 8px 20px; background: transparent; 
+        border: 1px solid rgba(255,255,255,.2);
+        color: rgba(255,255,255,.65); font-size: 11px; font-weight: 700;
+        letter-spacing: .12em; text-transform: uppercase;
+        cursor: pointer; transition: all .2s; font-family: inherit;
+        border-radius: 4px;
+      }
+      .hiw-btn:hover { border-color: rgba(255,255,255,.6); color: #fff; background: rgba(255,255,255,.05); }
+      .hiw-btn:disabled { opacity: .2; cursor: default; }
+      .hiw-btn-next { color: rgba(255,255,255,.65); }
+      .hiw-btn-next::after { content: ''; }
+      #hiw-prev::before { content: ''; }
+
+      @media (max-width: 700px) {
+        #how-it-works .hiw-layout { grid-template-columns: 1fr; }
+        .hiw-detail { border-left: none; padding-left: 0; border-top: 1px solid rgba(255,255,255,.08); padding-top: 32px; }
+      }
+
+      @media (max-width: 700px) {
+        #how-it-works .hiw-layout { grid-template-columns: 1fr; }
+      }
+
+      /* ── PROOF / CASE STUDIES ── */
+      #proof { padding-top: 60px; padding-bottom: 60px; }
+      .proof-inner { max-width: 960px; margin: 0 auto; }
+
+      .proof-header {
+        border-bottom: 1px solid rgba(255,255,255,.08);
+        padding-bottom: 32px; margin-bottom: 48px;
+      }
+      .proof-label {
+        display: inline-block; font-size: 11px; font-weight: 700;
+        letter-spacing: .2em; text-transform: uppercase;
+        color: rgba(255,255,255,.35); margin-bottom: 12px;
+      }
+      .proof-headline {
+        font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 700;
+        color: #fff; line-height: 1.2; letter-spacing: -.01em; margin-bottom: 8px;
+      }
+      .proof-subhead { font-size: .85rem; color: rgba(255,255,255,.4); }
+
+      .cs-card {
+        border-top: 1px solid rgba(255,255,255,.08);
+        padding: 40px 0;
+      }
+      .cs-card:last-child { border-bottom: 1px solid rgba(255,255,255,.08); }
+
+      .cs-card-top {
+        display: flex; justify-content: space-between; align-items: flex-start;
+        gap: 24px; margin-bottom: 32px; flex-wrap: wrap;
+      }
+      .cs-card-who { display: flex; align-items: flex-start; gap: 20px; }
+      .cs-card-index {
+        font-size: 11px; font-weight: 700; letter-spacing: .15em;
+        color: rgba(255,255,255,.25); padding-top: 4px; flex-shrink: 0;
+      }
+      .cs-card-name { font-size: 1.3rem; font-weight: 700; color: #fff; margin-bottom: 4px; }
+      .cs-card-desc { font-size: .85rem; color: rgba(255,255,255,.4); }
+
+      .cs-card-tags { display: flex; gap: 8px; flex-wrap: wrap; padding-top: 4px; }
+      .cs-tag {
+        font-size: 11px; font-weight: 600; letter-spacing: .08em;
+        color: rgba(255,255,255,.45); border: 1px solid rgba(255,255,255,.12);
+        padding: 4px 10px; border-radius: 4px;
+      }
+
+      .cs-card-stats {
+        display: flex; gap: 0; margin-bottom: 32px;
+        border: 1px solid rgba(255,255,255,.08); border-radius: 8px; overflow: hidden;
+      }
+      .cs-card-stat {
+        flex: 1; padding: 20px 24px;
+        border-right: 1px solid rgba(255,255,255,.08);
+        display: flex; flex-direction: column; gap: 4px;
+      }
+      .cs-card-stat:last-child { border-right: none; }
+      .cs-card-num { font-size: 1.5rem; font-weight: 800; color: #fff; line-height: 1; letter-spacing: -.02em; }
+      .cs-card-label { font-size: .75rem; color: rgba(255,255,255,.4); line-height: 1.4; }
+
+      .cs-card-body { display: flex; flex-direction: column; gap: 12px; max-width: 720px; }
+      .cs-card-body p { font-size: .9rem; color: rgba(255,255,255,.6); line-height: 1.75; }
+      .cs-card-body p strong { color: rgba(255,255,255,.85); font-weight: 600; }
+
+      @media (max-width: 640px) {
+        .cs-card-stats { flex-direction: column; }
+        .cs-card-stat { border-right: none; border-bottom: 1px solid rgba(255,255,255,.08); }
+        .cs-card-stat:last-child { border-bottom: none; }
+        .cs-card-top { flex-direction: column; }
+      }
+
+      /* ── TESTIMONIALS ── */
+      #testimonials { padding-top: 60px; padding-bottom: 60px; }
+      .testi-inner { max-width: 960px; margin: 0 auto; }
+
+      .testi-header {
+        border-bottom: 1px solid rgba(255,255,255,.08);
+        padding-bottom: 32px;
+        margin-bottom: 0;
+      }
+      .testi-label {
+        display: inline-block;
+        font-size: 11px; font-weight: 700; letter-spacing: .2em;
+        text-transform: uppercase; color: rgba(255,255,255,.35);
+        margin-bottom: 12px;
+      }
+      .testi-headline {
+        font-size: clamp(1.4rem, 3vw, 2rem);
+        font-weight: 700; color: #fff; line-height: 1.2; letter-spacing: -.01em;
+      }
+
+      .testi-list { display: flex; flex-direction: column; }
+      .testi-row {
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        gap: 48px;
+        align-items: center;
+        padding: 28px 0;
+        border-bottom: 1px solid rgba(255,255,255,.07);
+        transition: background .2s;
+      }
+      .testi-row:hover { background: rgba(255,255,255,.02); }
+
+      .testi-row-author { display: flex; align-items: center; gap: 14px; }
+      .testi-avatar { width: 44px; height: 44px; border-radius: 9999px; background: rgba(255,255,255,.1); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .85rem; color: #fff; flex-shrink: 0; }
+      .testi-avatar-img { background: none; overflow: hidden; }
+      .testi-avatar-img img { width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 9999px; }
+      .testi-name { font-size: .875rem; font-weight: 600; color: #fff; }
+      .testi-role { font-size: .75rem; color: rgba(255,255,255,.35); margin-top: 2px; }
+
+      .testi-quote {
+        font-size: 1rem; color: rgba(255,255,255,.75);
+        line-height: 1.65; font-style: normal;
+      }
+      .testi-quote::before { content: '"'; color: rgba(255,255,255,.2); margin-right: 2px; }
+      .testi-quote::after  { content: '"'; color: rgba(255,255,255,.2); margin-left: 2px; }
+
+      @media (max-width: 640px) {
+        .testi-row { grid-template-columns: 1fr; gap: 12px; }
+      }
+
+      /* ── ABOUT ── */
+      #about .about-inner { max-width: 960px; margin: 0 auto; }
+
+      .about-layout {
+        display: grid;
+        grid-template-columns: 1fr 320px;
+        gap: 72px;
+        align-items: start;
+      }
+      .about-img-col { position: sticky; top: 80px; }
+      .about-img-wrap {
+        width: 100%; aspect-ratio: 3/4;
+        overflow: hidden; border-radius: 4px;
+      }
+      .about-img-wrap img {
+        width: 100%; height: 100%;
+        object-fit: cover; object-position: top center; display: block;
+      }
+      .about-content-col { padding-top: 8px; }
+      .about-eyebrow {
+        font-size: 11px; font-weight: 700; letter-spacing: .2em;
+        color: #fff; text-transform: uppercase;
+        margin-bottom: 24px; margin-top: 32px; display: block; text-align: left;
+      }
+      .about-bio {
+        display: flex; flex-direction: column; gap: 10px;
+        margin-bottom: 20px; text-align: left;
+      }
+      .about-bio p:first-child {
+        font-size: 1rem; font-weight: 700; color: #fff; line-height: 1.4;
+      }
+      .about-bio p {
+        font-size: .82rem; color: rgba(255,255,255,.55); line-height: 1.7;
+      }
+      .about-stats {
+        display: flex; align-items: stretch;
+        border: 1px solid rgba(255,255,255,.08);
+        border-radius: 8px; overflow: hidden;
+      }
+      .about-stat {
+        flex: 1; padding: 20px 24px;
+        display: flex; flex-direction: column; gap: 6px;
+      }
+      .about-stat-divider {
+        width: 1px; background: rgba(255,255,255,.08); flex-shrink: 0;
+      }
+      .about-stat-num {
+        font-size: clamp(1.4rem, 2.5vw, 2rem);
+        font-weight: 800; color: #fff; line-height: 1; letter-spacing: -.02em;
+      }
+      .about-stat-desc {
+        font-size: .75rem; color: rgba(255,255,255,.4); line-height: 1.4;
+      }
+      @media (max-width: 800px) {
+        .about-layout { grid-template-columns: 1fr; gap: 40px; }
+        .about-img-col { position: static; }
+        .about-img-wrap { aspect-ratio: 4/3; max-width: 400px; }
+        .about-stats { flex-direction: column; }
+        .about-stat-divider { width: auto; height: 1px; }
+      }
+
+      /* ── CONTACT ── */
+      #contact { padding-top: 60px; padding-bottom: 60px; }
+      #contact .contact-inner { max-width: 960px; margin: 0 auto; }
+
+      .contact-hero {
+        border-bottom: 1px solid rgba(255,255,255,.08);
+        padding-bottom: 20px;
+        margin-bottom: 24px;
+      }
+      .contact-label {
+        display: inline-block;
+        font-size: 11px; font-weight: 700; letter-spacing: .2em;
+        text-transform: uppercase; color: rgba(255,255,255,.35);
+        margin-bottom: 12px;
+      }
+      .contact-headline {
+        font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+        font-weight: 700; color: #fff;
+        line-height: 1.2; letter-spacing: -.02em;
+        margin-bottom: 10px;
+      }
+      .contact-lead {
+        font-size: .9rem; color: rgba(255,255,255,.5);
+        line-height: 1.6; max-width: 420px;
+      }
+
+      .contact-layout {
+        display: grid;
+        grid-template-columns: 1fr 1.6fr;
+        gap: 60px;
+        align-items: start;
+      }
+
+      .contact-links { display: flex; flex-direction: column; margin-bottom: 28px; }
+      .contact-link {
+        display: flex; flex-direction: column; gap: 3px;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(255,255,255,.07);
+        text-decoration: none;
+        transition: border-color .2s;
+      }
+      .contact-link:first-child { border-top: 1px solid rgba(255,255,255,.07); }
+      .contact-link:hover { border-bottom-color: rgba(255,255,255,.2); }
+      .contact-link:hover .contact-link-value { color: #fff; }
+      .contact-link-label {
+        font-size: 10px; font-weight: 700; letter-spacing: .18em;
+        text-transform: uppercase; color: rgba(255,255,255,.3);
+      }
+      .contact-link-value {
+        font-size: .85rem; color: rgba(255,255,255,.65);
+        display: flex; align-items: center; gap: 6px;
+        transition: color .2s;
+      }
+      .contact-link-value svg { opacity: 0; transform: translateX(-4px); transition: all .2s; }
+      .contact-link:hover .contact-link-value svg { opacity: 1; transform: translateX(0); }
+      .contact-response {
+        font-size: .75rem; color: rgba(255,255,255,.25); letter-spacing: .02em;
+      }
+
+      .contact-form { display: flex; flex-direction: column; gap: 14px; }
+      .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+      .form-field { display: flex; flex-direction: column; gap: 6px; }
+      .form-field label {
+        font-size: 10px; font-weight: 700; letter-spacing: .15em;
+        text-transform: uppercase; color: rgba(255,255,255,.35);
+      }
+      .form-field input,
+      .form-field textarea {
+        width: 100%; background: transparent; border: none;
+        border-bottom: 1px solid rgba(255,255,255,.15);
+        padding: 8px 0; color: #fff; font-size: .9rem;
+        font-family: inherit; outline: none; resize: none;
+        border-radius: 0; transition: border-color .2s;
+      }
+      .form-field input::placeholder,
+      .form-field textarea::placeholder { color: rgba(255,255,255,.2); }
+      .form-field input:focus,
+      .form-field textarea:focus { border-bottom-color: rgba(255,255,255,.5); }
+
+      .form-footer { display: flex; justify-content: flex-end; padding-top: 0; }
+      .btn-submit {
+        display: inline-flex; align-items: center; gap: 10px;
+        padding: 11px 24px; background: #fff; color: #1a0003;
+        border: none; cursor: pointer; font-size: 11px; font-weight: 700;
+        letter-spacing: .12em; text-transform: uppercase;
+        font-family: inherit; border-radius: 4px;
+        transition: background .2s, gap .2s;
+      }
+      .btn-submit:hover { background: rgba(255,255,255,.88); gap: 16px; }
+      .btn-submit svg { transition: transform .2s; }
+      .btn-submit:hover svg { transform: translateX(3px); }
+
+      footer { text-align: center; padding: 24px 16px; font-size: 11px; color: rgba(255,255,255,.2); border-top: 1px solid rgba(255,255,255,.06); }
+
+      @media (max-width: 700px) {
+        .contact-layout { grid-template-columns: 1fr; gap: 36px; }
+        .form-row { grid-template-columns: 1fr; }
+        .form-footer { justify-content: flex-start; }
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- React mounts here: canvas character + cursor ring only -->
+    <div id="react-canvas"></div>
+
+    <!-- Our HTML navbar + all sections -->
+    <div id="page">
+
+      <nav class="navbar" id="navbar">
+        <a href="#home">HOME</a>
+        <a href="#how-it-works">HOW IT WORKS</a>
+        <a href="#proof">PROOF</a>
+        <a href="#testimonials">TESTIMONIALS</a>
+        <a href="#about">ABOUT</a>
+        <a href="#contact">CONTACT</a>
+      </nav>
+
+      <!-- HOME: transparent so the canvas character shows through -->
+      <section id="home">
+        <div class="hero-text">
+          <p class="hero-eyebrow">Hi, I'm Samrah</p>
+          <p class="hero-headline">I help you build an online presence that gets you found, trusted, and chosen.</p>
+          <div class="hero-ctas">
+            <a href="/Samrah-Khaliq-Resume.pdf" target="_blank" rel="noopener noreferrer" class="btn-primary">
+              Resume
+              <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <a href="#contact" class="btn-secondary">
+              <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+              Let's Talk
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- HOW IT WORKS -->
+      <section id="how-it-works">
+        <div class="hiw-inner">
+
+          <div class="hiw-header">
+            <span class="hiw-eyebrow">The process</span>
+            <h2 class="hiw-headline">From first conversation to consistent results.</h2>
+            <p class="hiw-subhead">From "who are you, really?" to "why is everyone messaging me?"</p>
+          </div>
+
+          <div class="hiw-layout">
+          <!-- Left: step list -->
+          <div class="hiw-list">
+            <div class="hiw-item active" data-step="0">
+              <span class="hiw-num">01</span>
+              <span class="hiw-label">Discovery &amp; brand audit</span>
+            </div>
+            <div class="hiw-item" data-step="1">
+              <span class="hiw-num">02</span>
+              <span class="hiw-label">Audience &amp; competitor research</span>
+            </div>
+            <div class="hiw-item" data-step="2">
+              <span class="hiw-num">03</span>
+              <span class="hiw-label">Strategy development</span>
+            </div>
+            <div class="hiw-item" data-step="3">
+              <span class="hiw-num">04</span>
+              <span class="hiw-label">Pillars &amp; creative direction</span>
+            </div>
+            <div class="hiw-item" data-step="4">
+              <span class="hiw-num">05</span>
+              <span class="hiw-label">Content production</span>
+            </div>
+            <div class="hiw-item" data-step="5">
+              <span class="hiw-num">06</span>
+              <span class="hiw-label">Publishing &amp; management</span>
+            </div>
+            <div class="hiw-item" data-step="6">
+              <span class="hiw-num">07</span>
+              <span class="hiw-label">Analysis &amp; optimisation</span>
+            </div>
+          </div>
+
+          <!-- Right: detail panel -->
+          <div class="hiw-detail">
+            <p class="hiw-counter">Step <span id="hiw-current">01</span> of 07</p>
+            <h3 class="hiw-title" id="hiw-title">Discovery &amp; Brand Audit</h3>
+            <p class="hiw-body" id="hiw-body">I learn how you think and speak, then audit where you stand today: headline, bio, positioning, recent posts and what's actually landing.</p>
+            <p class="hiw-outcome" id="hiw-outcome"><strong>Outcome:</strong> A clear picture of the gap between how you're seen and how you should be.</p>
+            <div class="hiw-nav">
+              <button class="hiw-btn" id="hiw-prev" onclick="hiwNav(-1)">Prev</button>
+              <button class="hiw-btn hiw-btn-next" id="hiw-next" onclick="hiwNav(1)">Next</button>
+            </div>
+          </div><!-- /.hiw-layout -->
+        </div><!-- /.hiw-inner -->
+      </section>
+      <section id="proof">
+        <div class="proof-inner">
+
+          <div class="proof-header">
+            <span class="proof-label">Case studies</span>
+            <h2 class="proof-headline">Real results, real clients.</h2>
+            <p class="proof-subhead">Every number comes from native platform analytics.</p>
+          </div>
+
+          <!-- Case 01 -->
+          <div class="cs-card">
+            <div class="cs-card-top">
+              <div class="cs-card-who">
+                <span class="cs-card-index">01</span>
+                <div>
+                  <h3 class="cs-card-name">Stephanie Goetz</h3>
+                  <p class="cs-card-desc">Former TV news anchor · Keynote speaker &amp; executive coach · LinkedIn</p>
+                </div>
+              </div>
+              <div class="cs-card-tags">
+                <span class="cs-tag">Strategy</span>
+                <span class="cs-tag">Ghostwriting</span>
+                <span class="cs-tag">Outreach</span>
+                <span class="cs-tag">6 months</span>
+              </div>
+            </div>
+
+            <div class="cs-card-stats">
+              <div class="cs-card-stat">
+                <span class="cs-card-num">636,877</span>
+                <span class="cs-card-label">impressions in 6 months</span>
+              </div>
+              <div class="cs-card-stat">
+                <span class="cs-card-num">+228%</span>
+                <span class="cs-card-label">impressions in the last 31 days</span>
+              </div>
+              <div class="cs-card-stat">
+                <span class="cs-card-num">+15%</span>
+                <span class="cs-card-label">follower growth</span>
+              </div>
+              <div class="cs-card-stat">
+                <span class="cs-card-num">30+</span>
+                <span class="cs-card-label">inbound speaking &amp; podcast invites</span>
+              </div>
+            </div>
+
+            <div class="cs-card-body">
+              <p><strong>The problem:</strong> Her reputation as a speaker was growing offline, but nothing showed up on LinkedIn. Posting was inconsistent and her story wasn't turning into inbound interest for keynotes or coaching.</p>
+              <p><strong>What I did:</strong> I took over her entire LinkedIn presence — writing every post in her voice, building content pillars from her real experiences, and running 100–150 targeted outreach connections per week to founders and leaders aged 30–45.</p>
+              <p><strong>The result:</strong> 636,877 impressions, 30+ inbound speaking invites, and a consistent pipeline of high-ticket leads — all from organic LinkedIn.</p>
+            </div>
+          </div>
+
+          <!-- Case 02 -->
+          <div class="cs-card">
+            <div class="cs-card-top">
+              <div class="cs-card-who">
+                <span class="cs-card-index">02</span>
+                <div>
+                  <h3 class="cs-card-name">ReadyExcels</h3>
+                  <p class="cs-card-desc">Instagram · Organic growth strategy</p>
+                </div>
+              </div>
+              <div class="cs-card-tags">
+                <span class="cs-tag">Content strategy</span>
+                <span class="cs-tag">Growth</span>
+                <span class="cs-tag">Instagram</span>
+              </div>
+            </div>
+
+            <div class="cs-card-stats">
+              <div class="cs-card-stat">
+                <span class="cs-card-num">7K → 30K+</span>
+                <span class="cs-card-label">followers in one month</span>
+              </div>
+              <div class="cs-card-stat">
+                <span class="cs-card-num">4.3×</span>
+                <span class="cs-card-label">follower count increase</span>
+              </div>
+            </div>
+
+            <div class="cs-card-body">
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- TESTIMONIALS -->
+      <section id="testimonials">
+        <div class="testi-inner">
+          <div class="testi-header">
+            <span class="testi-label">Client feedback</span>
+            <p class="testi-headline">What clients say about working together.</p>
+          </div>
+
+          <div class="testi-list">
+
+            <div class="testi-row">
+              <div class="testi-row-author">
+                <div class="testi-avatar testi-avatar-img"><img src="/adam.jpeg" alt="Adam Bravo" /></div>
+                <div>
+                  <p class="testi-name">Adam Bravo</p>
+                  <p class="testi-role">Diamond Hut Jeweler</p>
+                </div>
+              </div>
+              <p class="testi-quote">Beautifully done. Let's keep doing ones like that going forward.</p>
+            </div>
+
+            <div class="testi-row">
+              <div class="testi-row-author">
+                <div class="testi-avatar testi-avatar-img"><img src="/ready.jpeg" alt="Readyexcel" /></div>
+                <div>
+                  <p class="testi-name">Readyexcel</p>
+                  <p class="testi-role"></p>
+                </div>
+              </div>
+              <p class="testi-quote">Thanks for the quick work, it all looks fantastic!</p>
+            </div>
+
+            <div class="testi-row">
+              <div class="testi-row-author">
+                <div class="testi-avatar testi-avatar-img"><img src="/stephanie.jpeg" alt="Stephanie Goetz" /></div>
+                <div>
+                  <p class="testi-name">Stephanie Goetz</p>
+                  <p class="testi-role">Keynote Speaker</p>
+                </div>
+              </div>
+              <p class="testi-quote">Love the podcast compilation!</p>
+            </div>
+
+            <div class="testi-row">
+              <div class="testi-row-author">
+                <div class="testi-avatar testi-avatar-img"><img src="/jos.jpeg" alt="Jos Dirkx" /></div>
+                <div>
+                  <p class="testi-name">Jos Dirkx</p>
+                  <p class="testi-role">Keynote Speaker</p>
+                </div>
+              </div>
+              <p class="testi-quote">Love this post! It made me tear up.</p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ABOUT -->
+      <section id="about">
+        <div class="about-inner">
+          <div class="about-layout">
+
+            <!-- Left: content -->
+            <div class="about-content-col">
+              <p class="about-eyebrow">Who is behind the strategy?</p>
+
+              <div class="about-bio">
+                <p>I'm Samrah. I think in strategy and create in stories.</p>
+                <p>I'm a social media manager and creative strategist. I work with founders, coaches, creators and luxury brands, mostly on LinkedIn and Instagram.</p>
+                <p>My work sits between thinking and making. I figure out who you need to reach, what they need to hear and where the content opportunities are. Then I write and shape the content that says it, and turn your business goals into a plan you can actually follow.</p>
+                <p>Before I write a word, I learn how you think and speak, so what goes out sounds like you and no one else. AI helps me move faster. I never let it write the feeling — that's the part people trust.</p>
+              </div>
+
+              <div class="about-stats">
+                <div class="about-stat">
+                  <span class="about-stat-num">1M+</span>
+                  <span class="about-stat-desc">Impressions in 31 days on LinkedIn for a US client</span>
+                </div>
+                <div class="about-stat-divider"></div>
+                <div class="about-stat">
+                  <span class="about-stat-num">9 min</span>
+                  <span class="about-stat-desc">Revision turnaround record</span>
+                </div>
+                <div class="about-stat-divider"></div>
+                <div class="about-stat">
+                  <span class="about-stat-num">1 year+</span>
+                  <span class="about-stat-desc">Longest client relationship, and still running</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: image -->
+            <div class="about-img-col">
+              <div class="about-img-wrap">
+                <img src="/my-character.jpeg" alt="Samrah Khaliq" />
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section id="contact">
+        <div class="contact-inner">
+
+          <!-- Editorial header -->
+          <div class="contact-hero">
+            <span class="contact-label">Get in touch</span>
+            <h2 class="contact-headline">Let's make something<br>meaningful happen.</h2>
+            <p class="contact-lead">Tell me about your brand. I'll tell you what I'd do with it.</p>
+          </div>
+
+          <div class="contact-layout">
+
+            <!-- Left: contact info -->
+            <div class="contact-info-col">
+              <div class="contact-links">
+                <a href="mailto:samrah.khaliq@brandstrategy.com" class="contact-link">
+                  <span class="contact-link-label">Email</span>
+                  <span class="contact-link-value">samrah.khaliq@brandstrategy.com
+                    <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  </span>
+                </a>
+                <a href="https://linkedin.com/in/samrahkhaliq" target="_blank" rel="noopener noreferrer" class="contact-link">
+                  <span class="contact-link-label">LinkedIn</span>
+                  <span class="contact-link-value">linkedin.com/in/samrahkhaliq
+                    <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  </span>
+                </a>
+              </div>
+              <p class="contact-response">I respond within 24 hours.</p>
+            </div>
+
+            <!-- Right: form -->
+            <form class="contact-form" onsubmit="return false;">
+              <div class="form-row">
+                <div class="form-field">
+                  <label>Name</label>
+                  <input type="text" placeholder="Your name" />
+                </div>
+                <div class="form-field">
+                  <label>Email</label>
+                  <input type="email" placeholder="your@email.com" />
+                </div>
+              </div>
+              <div class="form-field">
+                <label>Message</label>
+                <textarea rows="3" placeholder="Tell me about your brand and what you're trying to achieve."></textarea>
+              </div>
+              <div class="form-footer">
+                <button type="submit" class="btn-submit">
+                  <span>Send message</span>
+                  <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </section>
+
+      <footer>© 2024 Samrah Khaliq · Social Media Manager &amp; Content Strategist</footer>
+
+    </div><!-- /#page -->
+
+    <!-- Load the React bundle — it will mount into #react-canvas -->
+    <script>
+      // Patch createRoot so React mounts into #react-canvas instead of #root
+      // The bundle calls: ip.createRoot(document.getElementById("root")).render(...)
+      // We intercept getElementById("root") to return our fixed canvas div
+      const _getElementById = document.getElementById.bind(document);
+      document.getElementById = function(id) {
+        if (id === 'root') return document.getElementById('react-canvas');
+        return _getElementById(id);
+      };
+    </script>
+    <script type="module" crossorigin src="/assets/index-DRB3ZNwO.js"></script>
+
+    <script>
+      // Case study tab switching
+      function csSwitch(idx) {
+        document.querySelectorAll('.cs-tab').forEach((t, i) => t.classList.toggle('active', i === idx));
+        document.querySelectorAll('.cs-panel').forEach((p, i) => p.classList.toggle('hidden', i !== idx));
+      }
+
+      // Active nav link on scroll
+      const sections = document.querySelectorAll('section[id]');
+      const navLinks = document.querySelectorAll('.navbar a');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            navLinks.forEach(a => {
+              a.classList.toggle('active', a.getAttribute('href') === '#' + entry.target.id);
+            });
+          }
+        });
+      }, { threshold: 0.4 });
+      sections.forEach(s => observer.observe(s));
+
+      // How It Works interactive steps
+      const hiwSteps = [
+        {
+          title: 'Discovery &amp; Brand Audit',
+          body:  'I learn how you think and speak, then audit where you stand today: headline, bio, positioning, recent posts and what\'s actually landing.',
+          outcome: 'A clear picture of the gap between how you\'re seen and how you should be.'
+        },
+        {
+          title: 'Audience &amp; Competitor Research',
+          body:  'I map exactly who you\'re trying to reach, what they care about, and what your competitors are doing so we can out-position them.',
+          outcome: 'A defined target audience profile and a competitor gap you can own.'
+        },
+        {
+          title: 'Strategy Development',
+          body:  'Using the audit and research, I build a 90-day content strategy with clear goals, messaging hierarchy and channel priorities.',
+          outcome: 'A written strategy doc you can refer back to at every decision point.'
+        },
+        {
+          title: 'Pillars &amp; Creative Direction',
+          body:  'We define 3–5 content pillars that balance authority, personality and value — then set the visual and tonal rules for every piece.',
+          outcome: 'A content system your audience recognises instantly.'
+        },
+        {
+          title: 'Content Production',
+          body:  'I write, design and format every post — captions, carousels, graphics — batched in advance so publishing is never rushed.',
+          outcome: 'A full content bank ready to go, reviewed and approved by you.'
+        },
+        {
+          title: 'Publishing &amp; Management',
+          body:  'Posts go out on the optimal schedule. I monitor comments, engage with your audience and keep the momentum going daily.',
+          outcome: 'A consistently active presence that builds trust without you lifting a finger.'
+        },
+        {
+          title: 'Analysis &amp; Optimisation',
+          body:  'Monthly reporting on reach, impressions, engagement and follower growth. What\'s working gets scaled; what isn\'t gets cut.',
+          outcome: 'A strategy that gets sharper every single month.'
+        }
+      ];
+
+      let hiwCurrent = 0;
+
+      function hiwNav(dir) {
+        hiwCurrent = Math.max(0, Math.min(hiwSteps.length - 1, hiwCurrent + dir));
+        hiwRender();
+      }
+
+      function hiwRender() {
+        const s = hiwSteps[hiwCurrent];
+        document.getElementById('hiw-current').textContent = String(hiwCurrent + 1).padStart(2, '0');
+        document.getElementById('hiw-title').innerHTML = s.title;
+        document.getElementById('hiw-body').textContent = s.body;
+        document.getElementById('hiw-outcome').innerHTML = '<strong>Outcome:</strong> ' + s.outcome;
+        document.getElementById('hiw-prev').disabled = hiwCurrent === 0;
+        document.getElementById('hiw-next').disabled = hiwCurrent === hiwSteps.length - 1;
+        document.querySelectorAll('.hiw-item').forEach((el, i) => {
+          el.classList.toggle('active', i === hiwCurrent);
+        });
+      }
+
+      document.querySelectorAll('.hiw-item').forEach((el, i) => {
+        el.addEventListener('click', () => { hiwCurrent = i; hiwRender(); });
+      });
+
+      hiwRender();
+    </script>
+
+  </body>
+</html>

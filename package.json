@@ -1,0 +1,10 @@
+{
+  "name": "portfolio-clean",
+  "private": true,
+  "scripts": {
+    "dev": "cd dist && python -m http.server 3000"
+  },
+  "devDependencies": {
+    "serve": "^14.2.8"
+  }
+}
