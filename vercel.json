@@ -1,6 +1,3 @@
 {
-  "framework": "vite",
-  "routes": [
-    { "src": "/((?!.*\\.(jpg|png|mp4|webp|css|js|svg|ico|json|pdf))$|[/]?.*)", "dest": "/index.html" }
-  ]
+  "framework": "vite"
 }
